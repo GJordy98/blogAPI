@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+
+  web:
+    build: .
+    command: sh -c "py manage.py migrate && py manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=mysql://user:wansi@db/dbblog
+
+
+  db:
+    image: mysql:8.0
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=wansi123
+      - MYSQL_DATABASE=dbblog
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=wansi
+    ports:
+      - "3306:3306"
+volumes:
+  mysql_data:
